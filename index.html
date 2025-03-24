@@ -1,121 +1,97 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CrickSkill</title>
+<script src="https://kit.fontawesome.com/8aa17a250d.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="style.css">
-<header>
-    <nav>
-        <div class="logo">CrickSkill</div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
-            <li><a href="#download">Download</a></li>
-            <li><a href="#support">Support</a></li>
-        </ul>
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
+<div class="header">
+    <div class="top" onclick="reload()">
+        <img src="https://i.ibb.co/Cs596xDf/logo.png" alt="logo">
+        <h2>CrickSkill</h2>
+    </div>
+    <div class="hyperlink">
+        <a onclick="reload()" class="link">Home</a>
+        <a href="privacy_policy-.html" class="link">Privacy Policy</a>
+        <a href="tos.html" class="link">Terms Of Service</a>
+        <a href="crickskill.apk" class="download" download> <i class="fa-solid fa-download"></i> Download</a>
+    </div>
+    <button id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+</div>
+<div id="slider" class="slider">
+    <button id="closeBtn">&times;</button>
+    <div class="mob-links">
+        <a onclick="reload()">Home</a>
+        <a href="privacy_policy-.html">Privacy Policy</a>
+        <a href="tos.html">Terms Of Service</a>
+        <a href="crickskill.apk" class="download" download>Download</a>
+    </div>
+</div>
+<div class="body">
+    <div class="text">
+        <div class="text-hero">
+            <h2>Show Your Crazy</h2>
+            <h3>"Cricket Trading Skills"</h3>
         </div>
-    </nav>
-</header>
-
-<section id="home" class="hero">
-    <div class="hero-content">
-        <h1>DOMINATE THE <span class="highlight">COMPETITION</span></h1>
-        <h2>Join thousands of users earn money by prediction</h2>
-        <a href="crickskill.apk" download class="cta-button">Download Now</a>
-        <div class="user-count">
-            <div class="counter">1000+</div>
-            <div class="counter-text">Active Users</div>
+        <p>Earn By Crazy & Amazing <br> Cricket Trading Skills.</p>
+        <a href="crickskill.apk" download class="download-btn">Download <i class="fa-solid fa-cloud-arrow-down"></i></a>
+    </div>
+    <div class="image">
+        <img src="https://i.ibb.co/v6Dw4SqX/shot3.jpg" alt="image">
+    </div>
+</div>
+<div class="customer-text" style="padding: 50px 10px;"><hr><h3>Features</h3><hr></div>
+<div class="features">
+    <div class="card">
+        <i class="fa-solid fa-trophy" style="color: #b9ad0e;"></i>
+        <div class="card-text">
+            <h2>Daily Matches</h2>
+            <p>Compete in daily prediction and win real prize.</p>
         </div>
     </div>
-    <div class="hero-image">
-        <img src="https://i.ibb.co/v6Dw4SqX/shot3.jpg">
-    </div>
-</section>
-
-<section id="features" class="features">
-    <h2>GAME-CHANGING <span class="highlight">FEATURES</span></h2>
-    <div class="feature-grid">
-        <div class="feature-card">
-            <div class="feature-icon">🏆</div>
-            <h3>Daily Matches</h3>
-            <p>Compete in daily prediction and win real prize</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">💰</div>
-            <h3>Win Prizes</h3>
-            <p>Earn rewards and climb the leaderboards</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <h3>Fair Play</h3>
-            <p>Realtime matches result will be calculated</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Track Stats</h3>
-            <p>Monitor your performance with detailed analytics</p>
+    <div class="card">
+        <i class="fa-solid fa-sack-dollar" style="color: #0eb92b;"></i>
+        <div class="card-text">
+            <h2>Win Prizes</h2>
+            <p>Earn rewards and climb the leaderboards.</p>
         </div>
     </div>
-</section>
-
-<section id="screenshots" class="screenshots">
-    <h2>APP <span class="highlight">SCREENSHOTS</span></h2>
-    <div class="screenshot-carousel">
-        <div class="carousel-container">
-            <div class="carousel-track">
-                <div class="carousel-slide">
-                    <img src="https://i.ibb.co/Y7LhqkN9/shot2.jpg" alt="Tournament Screen">
-                    <p>Home</p>
-                </div>
-                <div class="carousel-slide">
-                    <img src="https://i.ibb.co/v6Dw4SqX/shot3.jpg" alt="Profile Screen">
-                    <p>Matches</p>
-                </div>
-                <div class="carousel-slide">
-                    <img src="https://i.ibb.co/xqKQpbHK/shot1.jpg" alt="Leaderboard Screen">
-                    <p>Add Coins</p>
-                </div>
-                <div class="carousel-slide">
-                    <img src="https://i.ibb.co/TMT3PL39/shot4.jpg" alt="Match Screen">
-                    <p>Withdraw</p>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-buttons">
-            <button class="prev-button">❮</button>
-            <button class="next-button">❯</button>
+    <div class="card">
+        <i class="fa-solid fa-person" style="color: #b30eb9;"></i>
+        <div class="card-text">
+            <h2>Fair Play</h2>
+            <p>Realtime matches result will be calculated.</p>
         </div>
     </div>
-</section>
-
-<section id="download" class="download">
-    <h2>DOWNLOAD <span class="highlight">NOW</span></h2>
-    <p>Available exclusively for Android devices</p>
-    <a href="crickskill.apk" download class="cta-button">Download Now</a>
-    <div class="download-info">
-        <div class="download-stat">
-            <span class="download-value">4.4</span>
-            <span class="download-label">Rating</span>
-        </div>
-        <div class="download-stat">
-            <span class="download-value">5MB</span>
-            <span class="download-label">App Size</span>
+    <div class="card">
+        <i class="fa-solid fa-square-poll-vertical" style="color: #0e52b9;"></i>
+        <div class="card-text">
+            <h2>Track Stats</h2>
+            <p>Monitor your performance with detailed analytics.</p>
         </div>
     </div>
-</section>
-
-<section id="support" class="support">
-    <h2>CUSTOMER <span class="highlight">SUPPORT</span></h2>
-    <div class="support-options">
-        <div class="support-card">
-            <div class="support-icon">✉️</div>
-            <h3>Email</h3>
-            <p>Send us your queries via email</p>
-            <a href="mailto:crickskill@gmail.com" class="support-button">Email Support</a>
+</div>
+<div class="customer-text" style="padding: 50px 10px;"><hr><h3>App Screenshots</h3><hr></div>
+<div id="slider">
+    <div class="mobile">
+        <div class="phone">
+            <img id="image" src="" alt="current">
+            <button onclick="nextImage()"></button>
         </div>
     </div>
-</section>
+</div>
+<div class="customer-text" style="padding: 50px 10px;"><hr><h3>Customer Support</h3><hr></div>
+<div class="features">
+    <div class="card">
+        <i class="fa-brands fa-instagram" style="color: #b30eb9;"></i>
+        <div class="card-text">
+            <h2>Instagram</h2>
+            <a href="https://www.instagram.com/skillcrick" class="btn">Contact Us</a>
+        </div>
+    </div>
+    <div class="card">
+        <i class="fa-solid fa-envelope" style="color: #0e52b9;"></i>
+        <div class="card-text">
+            <h2>Email</h2>
+            <a href="mailto:crickskill@gmail.com" class="btn">Contact Us</a>
+        </div>
+    </div>
+</div>
 <script src="script.js"></script>
