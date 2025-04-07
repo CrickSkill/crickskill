@@ -1,98 +1,130 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/x-icon" href="https://i.ibb.co/1GR2kGfc/favicon.png">
 <script src="https://kit.fontawesome.com/8aa17a250d.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+    .profile > img { width: 45px; height: 45px; border-radius: 125px; }
+    .header { justify-content: space-between; height: 11vh; border-radius: 12px; margin: -20px 0 0 0; padding: 20px 20px 0 20px; }
+    .head > img { width: 45px; height: 45px; }
+    #coins > img { width: 30px; height: 30px; }
+    .head { gap: 2px; font-family: "Dancing Script", cursive; }
+    .head > p { font-size: 24px; }
+    #coins , .head { display: flex; align-items: center; justify-content: center; }
+    #coins { color: #fff; background: #045d6d; border-radius: 125px; padding: 4px 10px; }
+    .message { border-radius: 125px; display: flex; align-items: center; justify-content: space-around; margin: 10px 5px; padding: 10px; border: 1px solid #eee; }
+    .message > img { width: 50px; height: 50px; }
+    .message > p { font-size: 20px; text-transform: uppercase; font-family: "Open Sans", sans-serif; }
+    #slider { margin: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+    #slider > img { width: 100%; height: 200px; border-radius: 12px; }
+    .match { display: flex; align-items: center; justify-content: space-around; }
+    .match > img { width: 40px; height: 40px; }
+    .win { display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 10px; background: #25acc4; color: #fff; border-radius: 12px; }
+    .win > p { font-size: 14px; }
+    .win > b { font-size: 12px; }
+    .dot.active { color: red; }
+    .dot:hover { color: blue; }
+    .telegram { position: fixed; overflow: hidden; bottom: 12%; right: 20px; background: #24A1DE; padding: 10px; border-radius: 125px; }
+    .telegram > i { overflow: hidden; color: #FFF; font-size: 34px; }
+    .footer > a > i { font-size: 26px; color: #fff; overflow: hidden; }
+    .home { position: fixed; bottom: 3%; background: #e40006; padding: 15px; border-radius: 125px; border: 4px solid #fff; }
+    .footer { background: #e40006; overflow: hidden; position: fixed; width: 100%; bottom: 0; display: flex; align-items: center; justify-content: space-around; gap: 140px; padding: 15px 10px; }
+    .match { margin: 10px; padding: 10px; border: none; background: #eee; border-radius: 12px; cursor: pointer; }
+</style>
+<div id="loader" style="display: none;"><div class="loader"></div></div>
 <div class="header">
-    <div class="top" onclick="reload()">
-        <img src="https://i.ibb.co/Cs596xDf/logo.png" alt="logo">
-        <h2>CrickSkill</h2>
+    <div class="head" onclick="reload()">
+        <img src="https://i.ibb.co/Cs596xDf/logo.png">
+        <p>CrickSkill</p>
     </div>
-    <div class="hyperlink">
-        <a onclick="reload()" class="link">Home</a>
-        <a href="privacy_policy-.html" class="link">Privacy Policy</a>
-        <a href="tos.html" class="link">Terms Of Service</a>
-        <a href="com.crickskill" class="download" download> <i class="fa-solid fa-download"></i> Download</a>
-    </div>
-    <button id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+    <a id="coins" href="coins.html"></a>
 </div>
-<div id="slider" class="slider">
-    <button id="closeBtn">&times;</button>
-    <div class="mob-links">
-        <a onclick="reload()">Home</a>
-        <a href="privacy_policy-.html">Privacy Policy</a>
-        <a href="tos.html">Terms Of Service</a>
-        <a href="com.crickskill.apk" class="download" download>Download</a>
-    </div>
+<div class="message">
+    <img src="https://i.ibb.co/NgtyZ01n/cricket.png">
+    <p>Iss IPL Hoga Asli Kamai</p>
 </div>
-<div class="body">
-    <div class="text">
-        <div class="text-hero">
-            <h2>Show Your Crazy</h2>
-            <h3>"Cricket Trading Skills"</h3>
-        </div>
-        <p>Earn By Crazy & Amazing <br> Cricket Trading Skills.</p>
-        <a href="com.crickskill.apk" download class="download-btn">Download <i class="fa-solid fa-cloud-arrow-down"></i></a>
-    </div>
-    <div class="image">
-        <img src="https://i.ibb.co/v6Dw4SqX/shot3.jpg" alt="image">
-    </div>
+<div id="slider"></div>
+<div id="matches"></div>
+<a href="https://t.me/crickskill" class="telegram"><i class="fa-brands fa-telegram"></i></a>
+<div class="footer">
+    <a href="https://www.youtube.com/channel/UCMAjenIhxSZSotXIBkZWzOA"><i class="fa-brands fa-youtube"></i></a>
+    <a onclick="reload()" class="home"><i class="fa-solid fa-house"></i></a>
+    <a href="profile.html"><i class="fa-solid fa-circle-info"></i></a>
 </div>
-<div class="customer-text" style="padding: 50px 10px;"><hr><h3>Features</h3><hr></div>
-<div class="features">
-    <div class="card">
-        <i class="fa-solid fa-trophy" style="color: #b9ad0e;"></i>
-        <div class="card-text">
-            <h2>Daily Matches</h2>
-            <p>Compete in daily prediction and win real prize.</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class="fa-solid fa-sack-dollar" style="color: #0eb92b;"></i>
-        <div class="card-text">
-            <h2>Win Prizes</h2>
-            <p>Earn rewards and climb the leaderboards.</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class="fa-solid fa-person" style="color: #b30eb9;"></i>
-        <div class="card-text">
-            <h2>Fair Play</h2>
-            <p>Realtime matches result will be calculated.</p>
-        </div>
-    </div>
-    <div class="card">
-        <i class="fa-solid fa-square-poll-vertical" style="color: #0e52b9;"></i>
-        <div class="card-text">
-            <h2>Track Stats</h2>
-            <p>Monitor your performance with detailed analytics.</p>
-        </div>
-    </div>
-</div>
-<div class="customer-text" style="padding: 50px 10px;"><hr><h3>App Screenshots</h3><hr></div>
-<div id="slider">
-    <div class="mobile">
-        <div class="phone">
-            <img id="image" src="" alt="current">
-            <button onclick="nextImage()"></button>
-        </div>
-    </div>
-</div>
-<div class="customer-text" style="padding: 50px 10px;"><hr><h3>Customer Support</h3><hr></div>
-<div class="features">
-    <div class="card">
-        <i class="fa-brands fa-instagram" style="color: #b30eb9;"></i>
-        <div class="card-text">
-            <h2>Instagram</h2>
-            <a href="https://www.instagram.com/skillcrick" class="btn">Contact Us</a>
-        </div>
-    </div>
-    <div class="card">
-        <i class="fa-solid fa-envelope" style="color: #0e52b9;"></i>
-        <div class="card-text">
-            <h2>Email</h2>
-            <a href="mailto:crickskill@gmail.com" class="btn">Contact Us</a>
-        </div>
-    </div>
-</div>
-<script src="script.js"></script>
+<script>
+    const loader = document.getElementById("loader");
+    const username = localStorage.getItem("crick_local");
+    if (!username) {
+        window.location.href = "login.html";
+    }
+    loader.style.display = "flex";
+    fetch("https://script.google.com/macros/s/AKfycbwQo9txgAWYll4cgXzTExmnuNQOLELheu8MteYvDh5EA6r1aft4yicBS0RRw9JRoJQm0w/exec", {
+        method: "POST",
+        body: JSON.stringify({ username })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loader.style.display = "none";
+        if (data.status === "Banned") {
+            alert("Your account is banned.");
+            localStorage.removeItem("crick_local");
+            window.location.href = "login.html";
+        } else {
+            const coins = Math.floor(data.coins);
+            document.getElementById("coins").innerHTML = "<img src='https://i.ibb.co/TDpyPYfN/money-bag.png'><p>" + coins + "</p>";
+        }
+    })
+    .catch(error => {
+        loader.style.display = "none";
+        console.log("Error: " + error);
+    });
+
+    let currentIndex = 0;
+    function updateSlider(images) {
+        const slider = document.getElementById("slider");
+        const imgElement = document.createElement("img");
+        imgElement.src = images[currentIndex].src;
+        imgElement.onclick = () => window.location.href = images[currentIndex].url;
+        slider.innerHTML = "";
+        slider.appendChild(imgElement);
+
+        const dots = images.map((_, index) => {
+            return `<span class="dot${index === currentIndex ? ' active' : ''}" onclick="setActive(${index})">●</span>`;
+        }).join("");
+        slider.innerHTML += `<div class="dots">${dots}</div>`;
+        currentIndex = (currentIndex + 1) % images.length;
+        setTimeout(() => updateSlider(images), 3000);
+    }
+
+    fetch("https://script.google.com/macros/s/AKfycbwQo9txgAWYll4cgXzTExmnuNQOLELheu8MteYvDh5EA6r1aft4yicBS0RRw9JRoJQm0w/exec?action=getSliderData")
+        .then(response => response.json())
+        .then(images => updateSlider(images));
+
+    fetch("https://script.google.com/macros/s/AKfycbwQo9txgAWYll4cgXzTExmnuNQOLELheu8MteYvDh5EA6r1aft4yicBS0RRw9JRoJQm0w/exec?action=getMatchesData")
+        .then(response => response.json())
+        .then(matches => {
+            const matchesDiv = document.getElementById("matches");
+            matches.forEach(match => {
+                const date = new Date(match.time);
+                const formattedDate = date.toLocaleString();
+                const matchCard = `<div class="match" onclick="selectMatch('${match.id}')">
+                    <img src="https://i.ibb.co/NdrJRc3Y/trophy.png">
+                    <p>${match.title}</p> 
+                    <div class="win">
+                        <p>Boost</p>
+                        <b>UPTO 2.9x</b>
+                    </div>
+                    <p style="display: none;"> ${formattedDate}</p>
+                    </div>`;
+                matchesDiv.innerHTML += matchCard;
+            });
+        });
+
+    function selectMatch(id) {
+        localStorage.setItem("match_id", id);
+        window.location.href = "details.html";
+    }
+    function reload(){
+        location.reload();
+    }
+</script>
