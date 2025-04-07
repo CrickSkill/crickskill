@@ -1,0 +1,115 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+  .header { justify-content: center; }
+  .hidden { display: none; }
+  .form { margin: 10px; padding: 10px; border: 1px solid #eee; border-radius: 12px; }
+  .payment-method.selected { border-color: #25acc4; background-color: #25acc4; color: white; }
+  .payment-method > img { width: 55px; height: 55px; border-radius: 125px; }
+  .payment-method { display: flex; align-items: center; justify-content: center; width: 65px; height: 65px; border-radius: 125px; border: 1px solid #eee; }
+  .payment-methods { display: flex; align-items: center; justify-content: space-around; }
+  #qr-page > h2 { text-align: center; }
+  #qr-page > .qr-code { text-align: center; }
+  p { text-align: left; font-size: 20px; }
+  #qr-image { padding: 10px; border-radius: 12px; border: 2px solid #e40006; margin: 20px 0; }
+  #promo-container { width: 100%; }
+</style>
+<div class="header"><h2>Add Coins</h2></div>
+<div id="payment-page" class="form">
+  <img src="https://i.ibb.co/qh5vVhT/coins.png">
+  <input type="number" id="amount" placeholder="Enter Amount (10 to 500)" class="int" min="10" max="500" required>
+  <div id="promo-container" class="hidden">
+    <input type="text" id="promo" class="int" style="width: 100%;" placeholder="Promo Code (Optional)">
+  </div>
+  <div class="payment-methods">
+    <div class="payment-method" data-value="Phone Pe" onclick="selectPaymentMethod(this)"><img src="https://i.ibb.co/SXPwmJqM/ppay.jpg"></div>
+    <div class="payment-method" data-value="Google Pay" onclick="selectPaymentMethod(this)"><img src="https://i.ibb.co/mr3Sjvyz/gpay.png"></div>
+    <div class="payment-method" data-value="Paytm" onclick="selectPaymentMethod(this)"><img src="https://i.ibb.co/bRNpzYbL/paytm.png"></div>
+    <div class="payment-method" data-value="UPI" onclick="selectPaymentMethod(this)"><img src="https://i.ibb.co/FkyHJsYc/bhim.png"></div>
+  </div>
+  <button onclick="proceedToQR()" class="btn">Proceed</button>
+</div>
+<div id="qr-page" class="form hidden">
+  <h2>Scan QR Code</h2>
+  <div class="qr-code">
+    <img id="qr-image" src="" alt="QR Code">
+    <p>Merchant Name: <b id="display-merchant"></b></p>
+    <p>Amount: <b id="display-amount"></b></p>
+    <p>Payment Method: <b id="display-method"></b></p>
+  </div>
+  <input type="number" id="utr" class="int" placeholder="Enter 12-character UTR" maxlength="12" required>
+  <button onclick="completePayment()" class="btn">Done</button>
+</div>
+<div id="loader" class="hidden"><div class="loader"></div></div>
+<script>
+  let paymentData = {}, selectedMethod = null;
+  
+  function selectPaymentMethod(element) {
+    document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedMethod = element.getAttribute('data-value');
+  }
+
+  function checkPromoEligibility() {
+    const username = localStorage.getItem('crick_local');
+    fetch('https://script.google.com/macros/s/AKfycbzBrbKyfg3OVmMjESS0C-AqbFG6c1PDQlE68ZKqswH1g0w7i9j30TrULGFJ_u0QY0-54g/exec', {
+      method: 'POST', body: JSON.stringify({ action: 'checkPromo', username })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.hasPromo) {
+        document.getElementById('promo-container').classList.remove('hidden');
+      }
+    });
+  }
+
+  function proceedToQR() {
+    const amount = parseInt(document.getElementById('amount').value);
+    if (!amount || amount < 10 || amount > 500 || !selectedMethod) {
+      alert('Enter valid amount (10-500) and select a payment method.');
+      return;
+    }
+    const promo = document.getElementById('promo').value.trim();
+    paymentData = { amount, method: selectedMethod, promo };
+    document.getElementById('loader').style.display = 'flex';
+    fetch('https://script.google.com/macros/s/AKfycbzBrbKyfg3OVmMjESS0C-AqbFG6c1PDQlE68ZKqswH1g0w7i9j30TrULGFJ_u0QY0-54g/exec', {
+      method: 'POST', body: JSON.stringify({ action: 'fetchUpiDetails' })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('payment-page').style.display = 'none';
+      document.getElementById('qr-page').style.display = 'flex';
+      const upiLink = `upi://pay?pa=${data.upiId}&am=${amount}&pn=${encodeURIComponent(data.merchantName)}`;
+      document.getElementById('qr-image').src = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(upiLink)}`;
+      document.getElementById('display-amount').textContent = amount;
+      document.getElementById('display-method').textContent = selectedMethod;
+      document.getElementById('display-merchant').textContent = data.merchantName;
+    });
+  }
+
+  function completePayment() {
+    const utr = document.getElementById('utr').value;
+    if (!utr || utr.length !== 12) {
+      alert('Please Enter Valid 12-character UTR!');
+      return;
+    }
+    paymentData.utr = utr;
+    paymentData.username = localStorage.getItem('crick_local');
+    paymentData.transactionId = Math.floor(1000000000 + Math.random() * 9000000000);
+    document.getElementById('loader').style.display = 'flex';
+    fetch('https://script.google.com/macros/s/AKfycbzBrbKyfg3OVmMjESS0C-AqbFG6c1PDQlE68ZKqswH1g0w7i9j30TrULGFJ_u0QY0-54g/exec', {
+      method: 'POST', body: JSON.stringify({ action: 'savePayment', ...paymentData })
+    })
+    .then(response => response.json())
+    .then(() => {
+      document.getElementById('loader').style.display = 'none';
+      alert('Payment Request Sent Successfully!');
+      location.reload();
+    });
+  }
+  checkPromoEligibility();
+</script>

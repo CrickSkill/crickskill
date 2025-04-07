@@ -1,0 +1,56 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+    .header { justify-content: center; }
+    table { width: 95%; margin: 20px auto; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: center; border: 1px solid #ddd; }
+    th { background-color: #f2f2f2; }
+</style>
+<div id="loader"><div class="loader"></div></div>
+<div class="header">
+    <h2>Leaderboard</h2>
+</div>
+<table id="leaderboard" style="display: none;">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Coins</th>
+        </tr>
+    </thead>
+    <tbody id="leaderboardBody"></tbody>
+</table>
+<script>
+    async function fetchLeaderboard() {
+        try {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+    
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwvVQHp-JxvF4dXcqSPpkA-fZuUM_ysW-tnq0PaB6Od0VvPjpWEUxCMJNwlVyevYvEkCA/exec');
+            const data = await response.json();
+            data.sort((a, b) => b.coins - a.coins);
+    
+            const leaderboardBody = document.getElementById('leaderboardBody');
+            leaderboardBody.innerHTML = '';
+            data.forEach((user, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.username}</td>
+                        <td>${user.coins}</td>
+                    </tr>
+                `;
+                leaderboardBody.innerHTML += row;
+            });
+    
+            loader.style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'table';
+        } catch (error) {
+            console.error('Error fetching leaderboard data:', error);
+        }
+    }
+    window.onload = fetchLeaderboard;
+</script>
+    

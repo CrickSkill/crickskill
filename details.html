@@ -1,0 +1,111 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+  .header { justify-content: center; }
+  .card { margin: 10px; padding: 10px; background: #eee; border-radius: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+  .card > p { margin: 5px 0; font-size: 18px; }
+  .question-con { display: flex; justify-content: space-between; }
+  .question-con > img { width: 30px; }
+  .button-group { align-items: center; justify-content: space-evenly; display: flex; gap: 15px; }
+  .button-group > button { padding: 12px; font-size: 14px; width: 100%; border-radius: 8px; border: none; }
+  .more { background: #add8e6; font-weight: bolder; color: #0e87d8; }
+  .less { background: #e6adad; font-weight: bolder; color: #d80e0e; }
+  .win-text { text-align: center; margin: 10px 0px; }
+</style>
+</head>
+<body>
+<div id="loader"><div class="loader"></div></div>
+<div class="header">
+  <h2>Match</h2>
+</div>
+<div id="cards-container"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const matchId = localStorage.getItem('match_id');
+    if (!matchId) return;
+  
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+  
+    fetch('https://script.google.com/macros/s/AKfycbx01kcMuq46VqXPxBJOA-T9Gu3qYp8FL1ca4khdQ8pNp9YORfXd0R1qdsEcT0gAzsR4sQ/exec', {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({ action: 'getMatch', matchId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      loader.style.display = 'none';
+      const container = document.getElementById('cards-container');
+      const currentTime = new Date();
+  
+      data.forEach(row => {
+        if (row.question && row.amount) {
+          const matchTime = new Date(row.time);
+          if (matchTime > currentTime) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <h3>${row.title.replace(/'/g, "\\'")}</h3>
+              <div class="question-con">
+                <p>${row.question.replace(/'/g, "\\'")}</p>
+                <img src="https://i.ibb.co/jP9r7kZ1/kid-cricket.png">
+              </div>
+              <p><b>Time:</b> ${matchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              <p><b>Fee:</b> ${row.amount}</p>
+              <div class="win-text">
+                <span>Make Your Money Upto</span>
+              </div>
+              <div class="button-group">
+                <button class="more" onclick="handleChoice('${row.title.replace(/'/g, "\\'")}', '${row.question.replace(/'/g, "\\'")}', ${row.amount}, '${row.gameId}', 'More')">More - ₹${Math.floor(row.amount * 1.4)}</button>
+                <button class="less" onclick="handleChoice('${row.title.replace(/'/g, "\\'")}', '${row.question.replace(/'/g, "\\'")}', ${row.amount}, '${row.gameId}', 'Less')">Less - ₹${Math.floor(row.amount * 1.4)}</button>
+              </div>
+            `;
+            container.appendChild(card);
+          }
+        }
+      });
+    });
+  });
+  
+  async function handleChoice(title, question, amount, gameId, choice) {
+    const confirmation = confirm(`Did You Want To Go With ${choice}?`);
+    if (!confirmation) {
+      alert('Transition Canceled');
+      return;
+    }
+  
+    const username = localStorage.getItem('crick_local');
+    if (!username) return;
+  
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+  
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbx01kcMuq46VqXPxBJOA-T9Gu3qYp8FL1ca4khdQ8pNp9YORfXd0R1qdsEcT0gAzsR4sQ/exec', {
+        method: 'POST',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify({ 
+          action: 'processChoice',
+          username,
+          amount: Number(amount),
+          choice,
+          title,
+          question,
+          gameId
+        })
+      });
+      
+      const data = await response.json();
+      if (data.error) throw new Error(data.message);
+      alert(data.message);
+    } catch (error) {
+      alert('Transaction failed: ' + error.message);
+    } finally {
+      loader.style.display = 'none';
+    }
+  }
+  </script>  

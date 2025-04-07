@@ -1,0 +1,97 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+  .hidden { display: none; }
+  .header { justify-content: center; padding: 10px; }
+  .form { margin: 80% 10px 10px 10px; }
+  #popup { flex-direction: column; margin: 10px; position: fixed; top: 40%; background: #eee; padding: 10px; width: 90%; border-radius: 12px; gap: 10px; font-size: 20px; }
+  #popup > h3 { text-align: center; }
+</style>
+<div class="header">
+  <h2>Withdraw</h2>
+</div>
+<div id="withdraw-page" class="form">
+  <input type="text" id="upi-id" class="int" placeholder="Enter UPI ID">
+  <input type="number" id="withdraw-amount" class="int" placeholder="Enter Amount (30 to 300)" min="30" max="300">
+  <button onclick="checkBalance()" class="btn">Withdraw</button>
+</div>
+<div id="loader" class="hidden"><div class="loader"></div></div>
+<div id="popup" class="popup hidden">
+  <h3>Withdrawal Details</h3>
+  <p>UPI ID: <span id="popup-upi"></span></p>
+  <p>Amount: <span id="popup-amount"></span></p>
+  <p>Platform Fee (8%): <span id="popup-fee"></span></p>
+  <p>Actual Amount: <span id="popup-actual"></span></p>
+  <button onclick="confirmWithdrawal()" class="btn">Okay</button>
+</div>
+<div id="overlay" class="overlay hidden"></div>
+<script>
+  let withdrawalData = {};
+
+  function checkBalance() {
+    const upiId = document.getElementById('upi-id').value;
+    const amount = parseInt(document.getElementById('withdraw-amount').value);
+
+    if (!upiId || !amount) {
+      alert('Please enter UPI ID and amount.');
+      return;
+    }
+
+    if (amount < 30 || amount > 300) {
+      alert('Amount must be between 30 and 300.');
+      return;
+    }
+
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+
+    fetch('https://script.google.com/macros/s/AKfycbyxRctjIaj8XgnsRdTYTY8JgArspQwxqugC2TJs5bo08S87s6JURZMR0IlnZgXAf9pjow/exec', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'checkBalance', username: localStorage.getItem('crick_local') })
+    })
+    .then(response => response.json())
+    .then(data => {
+      loader.style.display = 'none';
+      if (amount > data.balance) {
+        alert('Insufficient balance.');
+        return;
+      }
+
+      withdrawalData.upiId = upiId;
+      withdrawalData.amount = amount;
+      withdrawalData.platformFee = (amount * 0.08).toFixed(2);
+      withdrawalData.actualAmount = (amount - withdrawalData.platformFee).toFixed(2);
+
+      document.getElementById('popup-upi').textContent = upiId;
+      document.getElementById('popup-amount').textContent = amount;
+      document.getElementById('popup-fee').textContent = withdrawalData.platformFee;
+      document.getElementById('popup-actual').textContent = withdrawalData.actualAmount;
+
+      document.getElementById('popup').style.display = 'flex';
+      document.getElementById('overlay').style.display = 'flex';
+    });
+  }
+
+  function confirmWithdrawal() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+
+    withdrawalData.username = localStorage.getItem('crick_local');
+
+    fetch('https://script.google.com/macros/s/AKfycbyxRctjIaj8XgnsRdTYTY8JgArspQwxqugC2TJs5bo08S87s6JURZMR0IlnZgXAf9pjow/exec', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'processWithdrawal', ...withdrawalData })
+    })
+    .then(response => response.json())
+    .then(data => {
+      loader.style.display = 'none';
+      document.getElementById('popup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+      alert('Withdrawal Request Sent Successfully!');
+      location.reload();
+    });
+  }
+</script>

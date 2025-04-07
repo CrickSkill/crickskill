@@ -1,0 +1,52 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="loader.css">
+<link rel="stylesheet" href="style.css">
+<style>
+    .header { height: 45vh; margin: -30px 0 10px 0; display: flex; align-items: center; justify-content: center; border-radius: 25px;}
+    .header > img { width: 210px; }
+</style>
+<div class="header">
+    <img src="https://i.ibb.co/9HJrQSHW/login.png">
+</div>
+<form action="https://script.google.com/macros/s/AKfycbzqps-8sdlCk2vsyrxr5qq2qmPPs2GcqmL9iGWsvkzmwrLBF4YOgO_7GWIo8vO8FuI3/exec" class="form" method="POST" id="loginForm">
+    <div class="customer-text"><hr><h3>Login</h3><hr></div>
+    <input type="number" id="mobileNumber" placeholder="Mobile Number" class="int" name="mobileNumber" pattern="[0-9]{10}" required>
+    <input type="password" id="password" placeholder="Password" class="int" name="password" required>
+    <button type="submit" class="btn">Login</button>
+    <p>Don't Have Account? <a href="signup.html">Signup</a></p>
+</form>
+
+<div id="loader" style="display:none;"><div class="loader"></div></div>
+
+<script>
+    if (localStorage.getItem("crick_local")) {
+        window.location.href = "index.html";
+    }
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const loader = document.getElementById("loader");
+        loader.style.display = "flex";
+        const formData = new FormData(this);
+        fetch("https://script.google.com/macros/s/AKfycbzqps-8sdlCk2vsyrxr5qq2qmPPs2GcqmL9iGWsvkzmwrLBF4YOgO_7GWIo8vO8FuI3/exec", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(result => {
+            const [status, username, userStatus] = result.split("|");
+            if (status === "success") {
+                if (userStatus === "Banned") {
+                    alert("Your account is banned.");
+                } else {
+                    localStorage.setItem("crick_local", username);
+                    window.location.href = "index.html";
+                }
+            } else {
+                alert("Invalid mobile number or password");
+            }
+        })
+        .catch(error => alert("Error: " + error))
+        .finally(() => loader.style.display = "none");
+    });
+</script>

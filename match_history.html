@@ -1,0 +1,53 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+  .card { margin: 10px; padding: 10px; background: #eee; border-radius: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+  .card > p { margin: 5px 0; font-size: 16px; }
+  .header { justify-content: center; }
+  .profit-positive { color: green; }
+  .profit-negative { color: red; }
+  #cards-container { display: flex; flex-direction: column-reverse;  }
+</style>
+<div id="loader" style="display: none;"><div class="loader"></div></div>
+<div class="header">
+  <h2>Matches</h2>
+</div>
+<div id="cards-container"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const username = localStorage.getItem('crick_local');
+    if (!username) return;
+
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+
+    fetch('https://script.google.com/macros/s/AKfycbwlpzqJs82fgNJb1h4OJgAnu07lKiPw75xbnQrOrsfA-hWtDa1B_suF8JfRNb8d2CKUaQ/exec', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'fetchJoinedData', username })
+    })
+    .then(response => response.json())
+    .then(data => {
+      loader.style.display = 'none';
+      const container = document.getElementById('cards-container');
+      data.forEach(row => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const profitClass = row.profit < 0 ? 'profit-negative' : 'profit-positive';
+        const profitText = row.profit !== null && row.profit !== '' ? `${row.profit}` : 'Ongoing';
+        card.innerHTML = `
+          <h3>${row.title}</h3>
+          <p><b>Question:</b> ${row.question}</p>
+          <p><b>Predict:</b> ${row.predict}</p>
+          <p><b>Amount:</b> ${row.amount}</p>
+          <p style="display: none;">Game ID: ${row.gameId}</p>
+          <p style="display: none;">Winning Ratio: ${row.winningRatio}x</p>
+          <p><b>Profit:</b> <span class="${profitClass}">${profitText}</span></p>
+        `;
+        container.appendChild(card);
+      });
+    });
+  });
+</script>

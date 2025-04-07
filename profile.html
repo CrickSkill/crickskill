@@ -1,0 +1,84 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<script src="https://kit.fontawesome.com/8aa17a250d.js" crossorigin="anonymous"></script>
+<style>
+    .profile > img { width: 120x; height: 120px; border-radius: 125px; border: 7px solid #fff; }
+    .header { background: #e40006; height: 80px; width: 100%; }
+    .top { width: 100%; display: flex; align-items: center; flex-direction: column; }
+    .profile { margin: -50px 0 0 0; }
+    h1 { font-size: 28px; font-weight: 600; margin: 0; }
+    p { font-size: 24px; margin: 0; }
+    .btn-box { display: flex; flex-direction: column; }
+    a { border-bottom: 1px solid #eee; font-size: 20px; padding: 15px 10px; color: #000; overflow: hidden; display: flex; align-items: center; gap: 10px; }
+    a > i { overflow: hidden; }
+    .top { display: flex; align-items: center; justify-content: center; }
+</style>
+<div id="loader" style="display: none;"><div class="loader"></div></div>
+<div id="dashboard"></div>
+<script>
+    const loader = document.getElementById("loader");
+    const username = localStorage.getItem("crick_local");
+    if (!username) {
+        window.location.href = "login.html";
+    }
+
+    loader.style.display = "flex";
+    fetch("https://script.google.com/macros/s/AKfycbzfJviJPfAbgkWx2S3zu64qIfALnD9xY1FcTL2GKElUFgH_BlUpFptq6kSnXoFlJpE/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "fetchUserDetails", username })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loader.style.display = "none";
+        if (data.status === "Success") {
+            document.getElementById("dashboard").innerHTML = `
+                <div class="top">
+                    <div class="header"></div>
+                    <div class="profile">
+                        <img src="https://img.freepik.com/free-vector/cute-astronaut-riding-rocket-waving-hand-cartoon-icon-illustration-science-technology-icon-concept_138676-2130.jpg">
+                    </div>
+                    <h1>${getGreeting()}</h1>
+                    <p>${data.name}!</p>
+                </div>
+                <div class="btn-box">
+                    <a href="coins.html" style="border-top : 1px solid #eee; margin : 20px 0 0 0;" class="btn-hero"><i class="fa-solid fa-coins"></i> Add Coins</a>
+                    <a href="withdraw.html" class="btn-hero"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw</a>
+                    <a href="withdraw_history.html" class="btn-hero"><i class="fa-regular fa-clock"></i> Withdrawals</a>
+                    <a href="transfer.html" class="btn-hero"><i class="fa-brands fa-stack-exchange"></i> Transfer Coins</a>
+                    <a href="match_history.html" class="btn-hero"><i class="fa-solid fa-arrow-rotate-left"></i> Matches</a>
+                    <a href="#" class="btn-hero"><i class="fa-solid fa-headphones-simple"></i> Customer Support</a>
+                    <a href="leaderboard.html" class="btn-hero"><i class="fa-solid fa-ranking-star"></i> Leaderboard</a>
+                    <a href="promo_code.html" class="btn-hero"><i class="fa-solid fa-gift"></i> Promo Code</a>
+                    <a id="logout-btn" class="btn-hero"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+            `;
+            document.getElementById("logout-btn").addEventListener("click", logout);
+        } else {
+            alert("User not found.");
+            logout();
+        }
+    })
+    .catch(error => {
+        loader.style.display = "none";
+        console.log("Error: " + error);
+    });
+
+    function getGreeting() {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return "Good Morning,";
+        if (hour >= 12 && hour < 17) return "Good Afternoon,";
+        if (hour >= 17 && hour < 21) return "Good Evening,";
+        return "Good Night,";
+    }
+
+    function logout() {
+        localStorage.removeItem("crick_local");
+        window.location.href = "login.html";
+    }
+
+    function reload() {
+        location.reload();
+    }
+</script>

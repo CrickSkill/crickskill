@@ -1,0 +1,68 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+    .header { justify-content: center; }
+    #loader { display: flex; }
+    .image { display: flex; align-items: center; justify-content: center; }
+    .image > img { width: 240px; }
+    .promo-box { display: flex; align-items: center; justify-content: center; gap: 30px; font-size: 20px; }
+    .box { padding: 10px 20px; border-radius: 125px; border: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+    .copy-btn { font-size: 20px; border: none; background: none; cursor: pointer; }
+    .steps { padding: 10px 20px; }
+    .text { padding: 10px 0px; text-align: center; font-size: 20px; }
+    h3 > span { color: #e40006; }
+</style>
+<div class="header">
+    <h2>Promo Code</h2>
+</div>
+<div class="container">
+    <div id="promoContainer">
+        <div id="loader"><div class="loader"></div></div>
+    </div>
+</div>
+<script>
+    var username = localStorage.getItem("crick_local");
+    if (!username) {
+        document.getElementById("promoContainer").innerHTML = "<p>Please login first.</p>";
+    } else {
+        fetch("https://script.google.com/macros/s/AKfycbx4zaBe_nH3P68C9JMKuoVkJVrPzPPV3DLd12-SV1GeW7U11ozucFqQ0KpdwDh_DJNqvQ/exec?username=" + username)
+            .then(response => response.text())
+            .then(promoCode => {
+                if (promoCode.includes("not found")) {
+                    document.getElementById("promoContainer").innerHTML = "<p>Username not found.</p>";
+                } else {
+                    document.getElementById("promoContainer").innerHTML = `
+                        <div class="image">
+                            <img src="https://cdni.iconscout.com/illustration/premium/thumb/app-referral-reward-illustration-download-in-svg-png-gif-file-formats--refer-a-friend-scheme-speaker-pack-people-illustrations-2785622.png?f=webp">
+                        </div>
+                        <div class="promo-box">
+                            <div class="box">
+                                <span id="promoCode">${promoCode}</span>
+                            </div>
+                        </div>
+                        <div class="text">
+                            <h3>Earn <span>₹3</span> On Each Refer</h3>
+                        </div>
+                        <div class="steps">
+                            <li>First Refer CrickSkill From Official <a href="https://crickskill.pages.dev"><b>Download Site</b></a>.</li>
+                            <li>Then User Needs To Add Coins.</li>
+                            <li>In Add Coins, Add Your Promo Code.</li>
+                            <li>If Your Friend Adds Coins, Then Refer Coins Added To Your Wallet.</li>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                document.getElementById("promoContainer").innerHTML = "<p>Error loading promo code.</p>";
+            });
+    }
+
+    function copyPromoCode() {
+        var promoText = document.getElementById("promoCode").textContent;
+        navigator.clipboard.writeText(promoText).then(() => {
+            alert("Promo code copied!");
+        });
+    }
+</script>

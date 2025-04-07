@@ -1,0 +1,58 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+    .form { margin: 80% 10px 10px 10px; }
+    .header { justify-content: center; }
+</style>
+<div id="loader" style="display: none;"><div class="loader"></div></div>
+<div class="header">
+    <h2>Transfer Coins</h2>
+</div>
+<div class="form">
+    <input type="text" class="int" id="recipient-username" placeholder="Enter Recipient Username">
+    <input type="number" class="int" id="amount" placeholder="Enter Amount">
+    <button onclick="sendCoins()" class="btn">Send</button>
+</div>
+<script>
+    const loader = document.getElementById("loader");
+    const senderUsername = localStorage.getItem("crick_local");
+    if (!senderUsername) {
+        window.location.href = "login.html";
+    }
+
+    function sendCoins() {
+        const recipientUsername = document.getElementById("recipient-username").value;
+        const amount = parseInt(document.getElementById("amount").value);
+
+        if (!recipientUsername || !amount || amount <= 0) {
+            alert("Please enter a valid username.");
+            return;
+        }
+
+        const confirmation = confirm(`Did You Really Want To Send ${amount} Coins To ${recipientUsername}?`);
+        if (!confirmation) return;
+
+        loader.style.display = "flex";
+        fetch("https://script.google.com/macros/s/AKfycbyx3xXCteVv2MxOyfgXpE4S5FA7u-EwzYGzNcozNIrqpoXvzsX5dUwQvzHhpAODYp0kZw/exec", {
+            method: "POST",
+            body: JSON.stringify({ action: "sendCoins", senderUsername, recipientUsername, amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            loader.style.display = "none";
+            if (data.status === "Success") {
+                alert("Coins sent successfully!");
+                location.reload();
+            } else {
+                alert(data.message);
+                location.reload();
+            }
+        })
+        .catch(error => {
+            loader.style.display = "none";
+            alert("Error: " + error);
+        });
+    }
+</script>

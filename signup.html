@@ -1,0 +1,57 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="loader.css">
+<link rel="stylesheet" href="style.css">
+<style>
+    .header { height: 45vh; margin: -30px 0 10px 0; display: flex; align-items: center; justify-content: center; border-radius: 25px;}
+    .header > img { width: 210px; }
+</style>
+<div class="header">
+    <img src="https://i.ibb.co/VY4PpWhr/signup.png">
+</div>
+<form action="https://script.google.com/macros/s/AKfycbzk9Sa332ok8JuxFjCzoYDVJg1EE3fdO9D2TABDgOfaMpTD8v7-jFxC2aMPbMKX_dXa8w/exec" class="form" method="POST" id="registrationForm">
+    <div class="customer-text"><hr><h3>Signup</h3><hr></div>
+    <input type="text" id="name" class="int" name="Name" placeholder="Name" required>
+    <input type="text" id="username" class="int" name="Username" placeholder="Username" required>
+    <label for="countryCode">Country:</label>
+    <select id="countryCode" name="countryCode" class="int">
+        <option value="+91">+91 (India)</option>
+        <option value="+1">+1 (USA)</option>
+        <option value="+44">+44 (UK)</option>
+        <option value="+61">+61 (Australia)</option>
+    </select>
+    <input type="number" id="mobileNumber" name="Mobile Number" placeholder="Mobile Number" class="int" required>
+    <input type="password" id="password" name="Password" placeholder="Password" class="int" required>
+    <button type="submit" class="btn">Submit</button>
+    <p>Already Have Account? <a href="login.html">Login</a></p>
+</form>
+<div id="loader" style="display:none;"><div class="loader"></div></div>
+<script>
+    if (localStorage.getItem("crick_local")) {
+        window.location.href = "index.html";
+    }
+
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const loader = document.getElementById("loader");
+        loader.style.display = "flex";
+        const formData = new FormData(this);
+        fetch("https://script.google.com/macros/s/AKfycbzk9Sa332ok8JuxFjCzoYDVJg1EE3fdO9D2TABDgOfaMpTD8v7-jFxC2aMPbMKX_dXa8w/exec", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(result => {
+            if (result.includes("success")) {
+                const username = formData.get("Username");
+                localStorage.setItem("crick_local", username);
+                alert(result);
+                window.location.href = "index.html";
+            } else {
+                alert(result);
+            }
+        })
+        .catch(error => alert("Error: " + error))
+        .finally(() => loader.style.display = "none");
+    });
+</script>

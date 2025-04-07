@@ -1,0 +1,52 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="loader.css">
+<style>
+    .withdraw-card { margin: 10px; padding: 10px; background: #eee; border-radius: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    .withdraw-card p { margin: 5px 0; font-size: 16px; }
+    .header { justify-content: center; }
+</style>
+<div class="header">
+    <h2>Withdrawals</h2>
+</div>
+<div id="loader" style="display: none;"><div class="loader"></div></div>
+<div id="withdraw-history"></div>
+<script>
+    const loader = document.getElementById("loader");
+    const username = localStorage.getItem("crick_local");
+    if (!username) {
+        window.location.href = "login.html";
+    }
+
+    loader.style.display = "flex";
+    fetch("https://script.google.com/macros/s/AKfycbxzmNKRQTYTdJ2ddNfybfNYwF4ZW0WFTLakQDGqQ5UTmta5qm0fIOi78R4iSSd_kcp0Ug/exec", {
+        method: "POST",
+        body: JSON.stringify({ action: "fetchWithdrawHistory", username })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loader.style.display = "none";
+        const historyDiv = document.getElementById("withdraw-history");
+        if (data.length === 0) {
+            historyDiv.innerHTML = "<p>No withdrawal history found.</p>";
+            return;
+        }
+        data.forEach(row => {
+            const statusColor = row.status === "Accepted" ? "green" : row.status === "Rejected" ? "red" : "orange";
+            const statusText = row.status || "Pending";
+            const historyCard = `
+                <div class="withdraw-card">
+                    <p>UPI ID: ${row.upiId}</p>
+                    <p>Amount: ₹${row.amount}</p>
+                    <p>Status: <span style="color: ${statusColor};">${statusText}</span></p>
+                </div>
+            `;
+            historyDiv.innerHTML += historyCard;
+        });
+    })
+    .catch(error => {
+        loader.style.display = "none";
+        alert("Error: " + error);
+    });
+</script>
