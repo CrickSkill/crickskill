@@ -3,20 +3,18 @@
   "short_name": "CrickSkill",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#e40006",
+  "theme_color": "#e40006",
   "icons": [
     {
       "src": "https://i.ibb.co/0pS327GZ/icon.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "https://i.ibb.co/0pS327GZ/icon.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
