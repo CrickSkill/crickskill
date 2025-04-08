@@ -3,7 +3,7 @@
   "short_name": "CrickSkill",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#e40006",
   "theme_color": "#e40006",
   "icons": [
     {
